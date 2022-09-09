@@ -4,7 +4,6 @@ class ModalityModel {
   String status = 'ATIVO';
   int graduationLevel;
   DateTime startDate;
-
   int payDay;
 
   ModalityModel({
@@ -16,7 +15,7 @@ class ModalityModel {
     required this.payDay,
   });
 
-  static Map<String, dynamic> toMap(ModalityModel model) {
+  static Map<String, dynamic> toJson(ModalityModel model) {
     return {
       'name': model.name,
       'value': model.value,
@@ -25,5 +24,15 @@ class ModalityModel {
       'startDate': model.startDate.toString(),
       'payDay': model.payDay
     };
+  }
+
+  static ModalityModel fromJson(Map<String, dynamic> json) {
+    return ModalityModel(
+        name: json['name'],
+        value: json['value'],
+        status: json['status'],
+        graduationLevel: json['graduationLevel'],
+        startDate: json['startDate'],
+        payDay: json['payDay']);
   }
 }

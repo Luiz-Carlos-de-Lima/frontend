@@ -1,7 +1,5 @@
-import 'dart:html';
-
 import 'package:dio/dio.dart';
-import 'package:frontend/services/http_client_interface.dart';
+import 'package:frontend/datasource/http_client_interface.dart';
 
 class DioClientImplements implements HttpClientInterface {
   final Dio dio = Dio();
@@ -11,22 +9,30 @@ class DioClientImplements implements HttpClientInterface {
   DioClientImplements({required this.url});
 
   @override
-  Future<Map<String, dynamic>> get({String? id}) async {
+  Future get({String? id}) async {
     try {
       if (id != null) {
         var response = await dio.get('$url/$id');
-        return {"valido": true, "data": response.data};
+        if (response.statusCode == 200) {
+          return response.data;
+        } else {
+          throw Exception();
+        }
       } else {
         var response = await dio.get(url);
-        return {"valido": true, "data": response.data};
+        if (response.statusCode == 200) {
+          return response.data;
+        } else {
+          throw Exception();
+        }
       }
     } catch (error) {
-      return {"valido": false, "error": error};
+      return error;
     }
   }
 
   @override
-  Future<Map<String, dynamic>> post({required Map<String, dynamic> obj}) async {
+  Future post({required Map<String, dynamic> obj}) async {
     try {
       var response = await dio.post(url, data: obj);
       if (response.statusCode == 200) {
@@ -40,7 +46,7 @@ class DioClientImplements implements HttpClientInterface {
   }
 
   @override
-  Future<Map<String, dynamic>> delete({required String id}) async {
+  Future delete({required String id}) async {
     try {
       var response = await dio.delete('$url/$id');
       return {"valido": true, "data": response.data};
